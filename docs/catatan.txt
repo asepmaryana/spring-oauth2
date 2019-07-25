@@ -1,0 +1,27 @@
+Catatan Yg Perlu Diingat:
+-------------------------
+
+1. Kode Basic Authorization ( -H "Authorization: Basic xxx" ) adalah hasil encode Base64 dari "client_id:client_secret"
+
+2. Kode Basic Authorization digunakan ketika melakukan login/meminta token, dengan perintah :
+	Request:
+	curl -X POST localhost:9050/oauth/token -H "Authorization:Basic ZGFtcmk6ZGFtcmkxMjM=" -d "grant_type=password" -d "username=kelly" -d "password=kelly@123" -d "client_id=damri"	
+	
+	Response:
+	{"access_token":"c8a1cc7a-d766-4836-8baf-e3b925cceb0a","token_type":"bearer","refresh_token":"1959cb0c-623b-454c-9417-6845ecf9e8a1","expires_in":24999,"scope":"read write"}
+	
+3. Perintah utk melakukan cek validitas token :
+	Request:
+	curl localhost:9050/oauth/check_token?token=c8a1cc7a-d766-4836-8baf-e3b925cceb0a
+	
+	Response:
+	{"aud":["carInventory"],"exp":1564045872,"user_name":"john","authorities":["INVENTORY_READ"],"client_id":"appclient","scope":["read","write"]}
+	
+4. Perintah untuk melakukan refresh token :
+	Request :
+	curl -X POST -H "Authorization:Basic ZGFtcmk6ZGFtcmkxMjM=" -d "grant_type=refresh_token" -d "refresh_token=1959cb0c-623b-454c-9417-6845ecf9e8a1" http://localhost:9050/oauth/token
+    
+    Response:
+    {"access_token":"308ce31f-0f04-4258-bdb7-42e4f5f089bf","token_type":"bearer","refresh_token":"1959cb0c-623b-454c-9417-6845ecf9e8a1","expires_in":24999,"scope":"read write"}
+    
+    Refresh token itu nilainya tetap, dilakukan untuk meminta token baru ketika token lama sudah expired. 
